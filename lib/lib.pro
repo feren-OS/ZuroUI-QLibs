@@ -6,10 +6,10 @@
 
 QT       += widgets multimedia svg
 
-TARGET = the-libs
+TARGET = zuroui-QLibs
 TEMPLATE = lib
 
-unix:!android {
+unix {
     CONFIG += c++14
 
     DEFINES += SYSTEM_LIBRARY_DIRECTORY=\\\"$$THELIBS_INSTALL_LIB\\\"
@@ -41,20 +41,6 @@ unix:!android {
             message("GSettings not found on this system.");
         }
     }
-}
-
-macx {
-    CONFIG += c++14
-    LIBS += -framework CoreFoundation -framework Cocoa
-
-    SOURCES += tcsdtools/csdbuttonbox-objc.mm \
-        tcsdtools/tcsdtools-objc.mm
-}
-
-win32 {
-    CONFIG += c++17
-    LIBS += -lUser32 -lKernel32 -lDbgHelp -lwindowsapp
-    DEFINES += _WIN32_WINNT=0x0601 # Windows 7 or up
 }
 
 DEFINES += THELIBS_LIBRARY
@@ -170,7 +156,7 @@ unix {
     module.files = qt_thelib.pri
 }
 
-unix:!macx:!android {
+unix {
     QT += dbus
 
     target.path = $$THELIBS_INSTALL_LIB
@@ -185,39 +171,6 @@ unix:!macx:!android {
     SOURCES += tnotification/tnotification-linux.cpp \
         jobs/jobdbus.cpp \
         jobs/jobdbusmanager.cpp
-}
-
-macx {
-    CONFIG(debug, debug|release): TARGET = the-libs_debug
-
-    target.path = /usr/local/lib
-    header.path = /usr/local/include/the-libs
-    prifiles.path = /usr/local/share/the-libs/pri
-    module.files = qt_thelib_mac.pri
-
-    SOURCES += tnotification/tnotification-mac.mm
-}
-
-win32 {
-    CONFIG(debug, debug|release): TARGET = the-libsd
-
-    module.files = qt_thelib.pri
-    header.path = "C:/Program Files/thelibs/include"
-    target.path = "C:/Program Files/thelibs/lib"
-    prifiles.path = "C:/Program Files/thelibs/pri"
-
-    SOURCES += tnotification/tnotification-win.cpp
-    HEADERS += tnotification/tnotification-win.h
-}
-
-android {
-    target.path = /libs/armeabi-v7a
-    header.path = /include/the-libs
-    module.files = qt_thelib.pri
-    module.path = /mkspecs/modules
-    prifiles.path = /share/the-libs/pri
-
-    SOURCES += tnotification/tnotification-android.cpp
 }
 
 INSTALLS += target module header prifiles
